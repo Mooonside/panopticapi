@@ -4,7 +4,6 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 import os, sys
-import json
 import glob
 import numpy as np
 import PIL.Image as Image
@@ -13,16 +12,16 @@ from panopticapi.utils import IdGenerator, save_json
 
 try:
     # set up path for cityscapes scripts
-    # sys.path.append('./cityscapesScripts/')
+    sys.path.append('/home/chenyifeng/cityscapesScripts/')
     from cityscapesscripts.helpers.labels import labels, id2label
 except Exception:
     raise Exception("Please load Cityscapes scripts from https://github.com/mcordts/cityscapesScripts")
 
-original_format_folder = './gtFine/val/'
+original_format_folder = '/home/chenyifeng/.mxnet/datasets/citys/gtFine/train/'
 # folder to store panoptic PNGs
-out_folder = './cityscapes_data/cityscapes_panoptic_val/'
+out_folder = '/home/chenyifeng/.mxnet/datasets/citys/panoptic_train/'
 # json with segmentations information
-out_file = './cityscapes_data/cityscapes_panoptic_val.json'
+out_file = '/home/chenyifeng/.mxnet/datasets/citys/panoptic_train.json'
 
 def panoptic_converter(original_format_folder, out_folder, out_file):
 
@@ -97,7 +96,7 @@ def panoptic_converter(original_format_folder, out_folder, out_file):
 
             segm_info.append({"id": int(segment_id),
                               "category_id": int(semantic_id),
-                              "area": area,
+                              "area": int(area),
                               "bbox": bbox,
                               "iscrowd": is_crowd})
 

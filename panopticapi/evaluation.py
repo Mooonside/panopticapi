@@ -3,11 +3,10 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
-import os, sys
+import os
 import numpy as np
 import json
 import time
-from datetime import timedelta
 from collections import defaultdict
 import argparse
 import multiprocessing
@@ -239,20 +238,30 @@ def pq_compute(gt_json_file, pred_json_file, gt_folder=None, pred_folder=None):
     t_delta = time.time() - start_time
     print("Time elapsed: {:0.2f} seconds".format(t_delta))
 
+    for cid, v in results['per_class'].items():
+        print("{:20s}| {:5.1f}  {:5.1f}  {:5.1f}".format(
+            categories[cid]['name'],
+            100.0 * v['pq'],
+            100.0 * v['sq'],
+            100.0 * v['rq'],
+        ))
+
     return results
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--gt_json_file', type=str,
-                        help="JSON file with ground truth data")
-    parser.add_argument('--pred_json_file', type=str,
+    parser.add_argument('pred_json_file', type=str,
                         help="JSON file with predictions data")
-    parser.add_argument('--gt_folder', type=str, default=None,
-                        help="Folder with ground turth COCO format segmentations. \
-                              Default: X if the corresponding json file is X.json")
-    parser.add_argument('--pred_folder', type=str, default=None,
+    parser.add_argument('pred_folder', type=str,
                         help="Folder with prediction COCO format segmentations. \
+                              Default: X if the corresponding json file is X.json")
+    parser.add_argument('--gt_json_file', type=str,
+                        default='/home/chenyifeng/.mxnet/datasets/coco/annotations/panoptic_val2017.json',
+                        help="JSON file with ground truth data")
+    parser.add_argument('--gt_folder', type=str,
+                        default='/home/chenyifeng/.mxnet/datasets/coco/annotations/panoptic_val2017',
+                        help="Folder with ground turth COCO format segmentations. \
                               Default: X if the corresponding json file is X.json")
     args = parser.parse_args()
     pq_compute(args.gt_json_file, args.pred_json_file, args.gt_folder, args.pred_folder)
